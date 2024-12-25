@@ -1,0 +1,160 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Microservice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #007BFF;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .example {
+      margin: 20px 0;
+    }
+
+    .example-output {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1rem;
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Timestamp Microservice</h1>
+  <div class="example">
+    <p>Example Usage:</p>
+    <p><a href='#'id="utc"></a></p>
+    <p><a href="#" id="unix"></a></p>
+  </div>
+  <div class="example">
+    <p>Example Output:</p>
+    <div class="example-output" id="example-output">
+
+    </div>
+  </div>
+  <footer>
+    By <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp.org</a>
+  </footer>
+  <script>
+    // Fetch data from the Node.js backend
+    fetch('http://localhost:3000/api')
+      .then(response => response.json())
+      .then(data => {
+        // Display data in the HTML
+       
+        const dataUtc = document.getElementById('utc');
+        dataUtc.innerHTML=`http://localhost:3000/api/${data.utc}`
+         const dataUnix = document.getElementById('unix');
+        dataUnix.innerHTML=`http://localhost:3000/api/${data.unix}`
+        const dataContainer = document.getElementById('example-output');
+        dataContainer.innerHTML = ` {"unix":${data.unix}, "utc":${data.utc}}`;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+      const link = document.getElementById('utc');
+    const newUrl = link.innerText; 
+    console.log(newUrl)
+    link.href = newUrl; // Update href
+      link.onclick = function (event) {
+      event.preventDefault(); // Prevent the default redirect
+      window.location.href = newUrl;
+      
+    };
+  </script>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Microservice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Timestamp Microservice</h1>
+  <p>Enter a date to get the Unix timestamp and UTC format.</p>
+
+  <input type="text" id="dateInput" placeholder="Enter a date or leave blank for current date">
+  <button onclick="fetchTimestamp()">Get Timestamp</button>
+
+  <div class="result" id="result">
+    <!-- Result will be displayed here -->
+  </div>
+
+  <script>
+    // Fetch the timestamp and display results
+    function fetchTimestamp() {
+      const dateInput = document.getElementById('dateInput').value;
+      const apiUrl = dateInput ? `/api/${encodeURIComponent(dateInput)}` : '/api/';
+  
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const resultDiv = document.getElementById('result');
+          if (data.error) {
+            resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+          } else {
+            resultDiv.innerHTML = `
+              <p>Unix Timestamp: ${data.unix}</p>
+              <p>UTC Format: ${data.utc}</p>
+            `;
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+  </script>
+
+</body>
+</html>
